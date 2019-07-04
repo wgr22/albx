@@ -11,7 +11,7 @@ $.ajax({
     $('#category').html(html);
   }
 })
-
+//111111
 $('#feature').on('change', function () {
   var formData = new FormData();
   formData.append('avatar', this.files[0]);
