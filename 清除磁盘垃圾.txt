@@ -1,0 +1,2 @@
+cleanmgr /sageset:99
+cleanmgr /SAGERUN:99
