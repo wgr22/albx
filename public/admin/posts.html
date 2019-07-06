@@ -25,7 +25,7 @@
         <li><a href="login.html"><i class="fa fa-sign-out"></i>退出</a></li>
       </ul>
     </nav>
-    <div class="container-fluid">
+    <div class="container-fluid" id="modifyBox">
       <div class="page-title">
         <h1>所有文章</h1>
         <a href="post-add.html" class="btn btn-primary btn-xs">写文章</a>
@@ -44,15 +44,11 @@
           </select>
           <button class="btn btn-default btn-sm">筛选</button>
         </form>
-        <ul class="pagination pagination-sm pull-right">
-          <li><a href="#">上一页</a></li>
-          <li><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">下一页</a></li>
+        <ul class="pagination pagination-sm pull-right" id="pageBox">
+
         </ul>
       </div>
-      <table class="table table-striped table-bordered table-hover" id="modifyBox">
+      <table class="table table-striped table-bordered table-hover">
         <thead>
           <tr>
             <th>标题</th>
@@ -126,56 +122,72 @@
     </tr>
     {{/each}}
   </script>
+  <!-- 分页模板 -->
+  <script type="text/html" id="pageTpl">
+    {{if page > 1}}
+    <li><a href="javascript:;" onclick="changePage({{page-1}})">上一页</a></li>
+    {{/if}}
+    {{each display}}
+    <li><a href="javascript:;" onclick="changePage({{$value}})">{{$value}}</a></li>
+    {{/each}}
+    {{if page < pages}}
+    <li><a href="javascript:;" onclick="changePage({{page+1}})">下一页</a></li>
+    {{/if}}
+  </script>
   <!-- 修改模板 -->
   <script type="text/html" id="modifyFormTpl">
-    <form class="row" id="modifyForm" data-id="{{_id}}">
-      <div class="col-md-9">
-        <div class="form-group">
-          <label for="title">标题</label>
-          <input name="title" id="title" class="form-control input-lg" type="text" value="{{title}}">
-        </div>
-        <div class="form-group">
-          <label for="content">内容</label>
-          <textarea name="content" id="content" class="form-control input-lg" cols="30" rows="10"
-            placeholder="内容">{{content}}</textarea>
-        </div>
+    <div class="container-fluid">
+      <div class="page-title">
+        <h1>修改文章</h1>
       </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="feature">文章封面</label>
-          <!-- show when image chose -->
-          {{if thumbnail==''||thumbnail==null}}
-          <img class="help-block thumbnail" style="display: none">
-          {{else}}
-          <img class="help-block thumbnail" style="display: block" src="{{thumbnail}}">
-          {{/if}}
-          <input type="hidden" name="thumbnail" value="" id="hiddenImg">
-          <input id="feature" class="form-control" type="file">
+      <form class="row" id="modifyForm" data-id="{{_id}}">
+        <div class="col-md-9">
+          <div class="form-group">
+            <label for="title">标题</label>
+            <input name="title" id="title" class="form-control input-lg" type="text" value="{{title}}">
+          </div>
+          <div class="form-group">
+            <label for="content">内容</label>
+            <textarea name="content" id="content" class="form-control input-lg" cols="30" rows="10"
+              placeholder="内容">{{content}}</textarea>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="category">所属分类</label>
-          <select name="category" id="category" class="form-control">
-            {{each categories}}
-            <option {{category==$value._id?'selected':''}} value="{{$value._id}}">{{$value.title}}</option>
-            {{/each}}
-          </select>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="feature">文章封面</label>
+            <!-- show when image chose -->
+            {{if thumbnail==''||thumbnail==null}}
+            <img class="help-block thumbnail" style="display: none" id="thumbnail">
+            {{else}}
+            <img class="help-block thumbnail" style="display: block" src="{{thumbnail}}" id="thumbnail">
+            {{/if}}
+            <input type="hidden" name="thumbnail" value="{{thumbnail}}" id="hiddenImg">
+            <input id="feature" class="form-control" type="file">
+          </div>
+          <div class="form-group">
+            <label for="category">所属分类</label>
+            <select name="category" id="category" class="form-control">
+              {{each categories}}
+              <option {{category==$value._id?'selected':''}} value="{{$value._id}}">{{$value.title}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="created">发布时间</label>
+            <input value="{{updateAt.split('T')[0]}}" name="createAt" id="created" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="status">状态</label>
+            <select name="state" id="status" class="form-control">
+              <option value="0">{{state==0?'草稿':'已发布'}}</option>
+              <option value="1">{{state!=0?'草稿':'已发布'}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">修改</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="created">发布时间</label>
-          <input value="{{updateAt.split('T')[0]}}" name="createAt" id="created" class="form-control" type="date">
-        </div>
-        <div class="form-group">
-          <label for="status">状态</label>
-          <select name="state" id="status" class="form-control">
-            <option value="0">{{state==0?'草稿':'已发布'}}</option>
-            <option value="1">{{state!=0?'草稿':'已发布'}}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary" type="submit">修改</button>
-        </div>
-      </div>
-    </form>
+      </form>
   </script>
   <script src="../assets/js/posts-edit.js"></script>
 </body>
